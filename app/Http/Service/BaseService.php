@@ -10,5 +10,7 @@ namespace App\Http\Service;
 
 class BaseService
 {
-
+	public function __construct()
+	{
+	}
 }

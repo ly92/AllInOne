@@ -16,4 +16,6 @@ class NoteService extends BaseService
     {
         parent::__construct();
     }
+
+    // public function add()
 }

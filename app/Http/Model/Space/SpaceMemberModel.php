@@ -26,7 +26,7 @@ class SpaceMemberModel extends BaseModel
      * @return int
      */
     public function add($data){
-        return DB::table(self::$atble)->insertGetId($data);
+        return DB::table(self::$atble)->insert($data);
     }
 
     /**
@@ -36,7 +36,10 @@ class SpaceMemberModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function getById($id, $status = 1){
-        return DB::table(self::$table)->where('id', $id)->where('status', $status)->first();
+    	if ($status){
+		    return DB::table(self::$table)->where('id', $id)->where('status', $status)->first();
+	    }
+	    return DB::table(self::$table)->where('id', $id)->first();
     }
 
     /**
