@@ -18,7 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:api')->get('/test', function () {
-    return "test success!";
+
+Route::middleware([])->group(function (){
+    Route::post('register', 'Api\ClientController@register');
 });
+
+
+
 

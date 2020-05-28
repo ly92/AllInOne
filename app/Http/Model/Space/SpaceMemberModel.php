@@ -10,6 +10,7 @@ namespace App\Http\Model\Space;
 
 
 use App\Http\Model\BaseModel;
+use App\Http\Model\Client\ClientModel;
 use Illuminate\Support\Facades\DB;
 
 class SpaceMemberModel extends BaseModel
@@ -50,6 +51,20 @@ class SpaceMemberModel extends BaseModel
      */
     public function update($id, $data){
         return DB::table(self::$table)->where('id', $id)->update($data);
+    }
+
+    /**
+     * 空间的成员
+     * @param $sid
+     * @param int $status
+     * @return array
+     */
+    public function getBySid($sid, $status = 1){
+        return DB::table(self::$table . ' as a')
+            ->leftJoin(ClientModel::$table . ' as b', 'a.cid', '=', 'b.id')
+            ->where('a.sid', $sid)->where('a.status', $status)
+            ->select('a.cid', 'b.name', 'b.mobile')
+            ->get()->toArray();
     }
 
 }
