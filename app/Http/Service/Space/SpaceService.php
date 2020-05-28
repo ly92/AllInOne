@@ -85,6 +85,7 @@ class SpaceService extends BaseService
                 $temp = [
                     'sid' => $sid,
                     'cid' => $client['id'],
+                    'status' => 2,
                     'creationTime' => time()
                 ];
                 $data[] = $temp;

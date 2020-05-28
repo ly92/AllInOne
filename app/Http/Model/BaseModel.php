@@ -11,4 +11,7 @@ namespace App\Http\Model;
 class BaseModel
 {
 
+	public function __construct()
+	{
+	}
 }

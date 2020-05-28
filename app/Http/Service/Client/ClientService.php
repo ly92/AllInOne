@@ -150,13 +150,13 @@ class ClientService extends BaseService
     }
 
 	/**
-	 * 修改手机号
+	 * 修改信息
 	 * @param $cid
 	 * @param $mobile
 	 * @return string
 	 * @throws \Exception
 	 */
-    public function modifyMobile($cid, $mobile){
+    public function modify($cid, $mobile, $name){
 	    if (empty($cid)){
 		    throw new \Exception('操作错误', 1004);
 	    }
@@ -166,11 +166,20 @@ class ClientService extends BaseService
 		    throw new \Exception('账户不存在', 1007);
 	    }
 
+	    $data = [];
+	    if (!empty($mobile)){
+	    	$data['mobile'] = $mobile;
+	    }
+	    if (!empty($name)){
+	    	$data['name'] = $name;
+	    }
+	    if (empty($data)){
+	    	return 'success';
+	    }
+
+	    $data['modifyTime'] = time();
 	    if ($client['mobile'] != $mobile){
-	    	$this->clientModel->update($cid, [
-	    		'mobile' => $mobile,
-			    'modifyTime' => time()
-		    ]);
+	    	$this->clientModel->update($cid, $data);
 	    }
 
 	    return 'success';
