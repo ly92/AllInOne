@@ -13,4 +13,15 @@ class BaseService
 	public function __construct()
 	{
 	}
+
+    /**
+     * @param $message
+     * @param $code
+     * @throws \Exception
+     */
+	public function throwError($message = '', $code = 1000){
+	    throw new \Exception($message, $code);
+    }
+
+
 }

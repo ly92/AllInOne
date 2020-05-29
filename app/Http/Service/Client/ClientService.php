@@ -47,16 +47,16 @@ class ClientService extends BaseService
 	 */
     public function login($mobile, $password){
         if (empty($mobile) || empty($password)){
-            throw new \Exception('请输入手机号和密码', 1001);
+            $this->throwError('请输入手机号和密码', 1001);
         }
 
         $client = $this->clientModel->getByMobile($mobile);
         if (empty($client)){
-            throw new \Exception('当前手机号未注册', 1002);
+            $this->throwError('当前手机号未注册', 1002);
         }
 
         if ($client['password'] != $password){
-        	throw new \Exception('密码错误', 1003);
+        	$this->throwError('密码错误', 1003);
         }
 
         //重复登录验证,生成本次登录的token
@@ -80,12 +80,12 @@ class ClientService extends BaseService
 	 */
     public function logout($cid){
     	if (empty($cid)){
-    		throw new \Exception('操作错误', 1004);
+    		$this->throwError('操作错误', 1004);
 	    }
 
 	    $client = $this->clientModel->getById($cid);
 	    if (empty($client)){
-		    throw new \Exception('账户不存在', 1007);
+		    $this->throwError('账户不存在', 1007);
 	    }
     	//将记录的token清空
 	    $this->clientModel->update($client['id'], ['token' => '', 'modifyTime' => time()]);
@@ -102,13 +102,14 @@ class ClientService extends BaseService
 	 * @throws \Exception
 	 */
     public function add($mobile, $password, $name){
+
 	    if (empty($mobile) || empty($password)){
-		    throw new \Exception('请输入手机号和密码', 1005);
+		    $this->throwError('请输入手机号和密码', 1005);
 	    }
 
 	    $client = $this->clientModel->getByMobile($mobile);
 	    if (!empty($client)){
-		    throw new \Exception('当前手机号已注册', 1006);
+		    $this->throwError('当前手机号已注册', 1006);
 	    }
 
 	    $id = $this->clientModel->add([
@@ -132,12 +133,12 @@ class ClientService extends BaseService
 	 */
     public function resetPassword($mobile, $newPassword, $oldPassword = '', $code = ''){
 	    if (empty($mobile) || empty($newPassword)){
-		    throw new \Exception('请输入手机号和新的密码', 1005);
+		    $this->throwError('请输入手机号和新的密码', 1005);
 	    }
 
 	    $client = $this->clientModel->getByMobile($mobile);
 	    if (empty($client)){
-		    throw new \Exception('当前手机号未注册', 1006);
+		    $this->throwError('当前手机号未注册', 1006);
 	    }
 
 	    if (!empty($oldPassword) && $client['password'] == $oldPassword){
@@ -158,12 +159,12 @@ class ClientService extends BaseService
 	 */
     public function modify($cid, $mobile, $name){
 	    if (empty($cid)){
-		    throw new \Exception('操作错误', 1004);
+		    $this->throwError('操作错误', 1004);
 	    }
 
 	    $client = $this->clientModel->getById($cid);
 	    if (empty($client)){
-		    throw new \Exception('账户不存在', 1007);
+		    $this->throwError('账户不存在', 1007);
 	    }
 
 	    $data = [];

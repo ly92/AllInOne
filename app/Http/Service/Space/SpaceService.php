@@ -40,16 +40,16 @@ class SpaceService extends BaseService
     public function add($cid, $name, $desc)
     {
         if (empty($name)) {
-            throw new \Exception('空间名称不可为空', 1001);
+            $this->throwError('空间名称不可为空', 1001);
         }
 
         if (!empty($cid)) {
             $client = (new ClientService())->getById($cid);
             if (empty($client)) {
-                throw new \Exception('用户信息不存在', 1002);
+                $this->throwError('用户信息不存在', 1002);
             }
         } else {
-            throw new \Exception('缺少用户信息', 1002);
+            $this->throwError('缺少用户信息', 1002);
         }
 
         $id = $this->spaceModel->add([
@@ -71,11 +71,11 @@ class SpaceService extends BaseService
     public function addSpaceMember($sid, $mobiles)
     {
         if (empty($sid) || empty($mobiles)) {
-            throw new \Exception('空间信息和成员信息不可为空', 1004);
+            $this->throwError('空间信息和成员信息不可为空', 1004);
         }
         $space = $this->spaceModel->getById($sid);
         if (empty($space)) {
-            throw new \Exception('空间信息不存在', 1005);
+            $this->throwError('空间信息不存在', 1005);
         }
         $mobiles = explode(',', $mobiles);
         $data = [];
@@ -106,11 +106,11 @@ class SpaceService extends BaseService
     public function getSpaceMembers($sid)
     {
         if (empty($sid)) {
-            throw new \Exception('空间信息不可为空', 1004);
+            $this->throwError('空间信息不可为空', 1004);
         }
         $space = $this->spaceModel->getById($sid);
         if (empty($space)) {
-            throw new \Exception('空间信息不存在', 1007);
+            $this->throwError('空间信息不存在', 1007);
         }
         $members = $this->spaceMemberModel->getBySid($sid);
         $space['members'] = $members;
@@ -127,7 +127,7 @@ class SpaceService extends BaseService
     public function updateSpaceMember($id, $status)
     {
         if (empty($id) || empty($status)) {
-            throw new \Exception('请求信息有误', 1005);
+            $this->throwError('请求信息有误', 1005);
         }
         $spaceMember = $this->spaceMemberModel->getById($id, 0);
         if ($spaceMember['status'] != $status) {
@@ -136,7 +136,7 @@ class SpaceService extends BaseService
                 'modifyTime' => time()
             ]);
             if (!$result) {
-                throw new \Exception('修改失败', 1002);
+                $this->throwError('修改失败', 1002);
             }
         }
         return 'success';
@@ -151,11 +151,11 @@ class SpaceService extends BaseService
     public function getSpaces($cid)
     {
         if (empty($cid)) {
-            throw new \Exception('缺少用户信息', 1002);
+            $this->throwError('缺少用户信息', 1002);
         }
         $client = (new ClientService())->getById($cid);
         if (empty($client)) {
-            throw new \Exception('用户信息不存在', 1002);
+            $this->throwError('用户信息不存在', 1002);
         }
 
         $spaces = $this->spaceModel->getSpaces($cid);
@@ -173,25 +173,25 @@ class SpaceService extends BaseService
     public function addSpaceNote($sid, $nid)
     {
         if (empty($sid) || empty($nid)) {
-            throw new \Exception('空间信息和笔记信息不可为空', 1004);
+            $this->throwError('空间信息和笔记信息不可为空', 1004);
         }
         $space = $this->spaceModel->getById($sid);
         if (empty($space)) {
-            throw new \Exception('空间信息不存在', 1005);
+            $this->throwError('空间信息不存在', 1005);
         }
         $note = (new NoteService())->getById($nid);
         if (empty($note)) {
-            throw new \Exception('笔记信息不存在', 1005);
+            $this->throwError('笔记信息不存在', 1005);
         }
         if ($space['cid'] != $note['cid']) {
-            throw new \Exception('空间和笔记不属于同一用户', 1007);
+            $this->throwError('空间和笔记不属于同一用户', 1007);
         }
         $result = $this->spaceNoteModel->add([
             'sid' => $sid,
             'nid' => $nid
         ]);
         if (!$result) {
-            throw new \Exception('添加失败', 1002);
+            $this->throwError('添加失败', 1002);
         }
 
         return 'success';
@@ -207,7 +207,7 @@ class SpaceService extends BaseService
     public function updateSpaceNote($id, $status)
     {
         if (empty($id) || empty($status)) {
-            throw new \Exception('请求信息有误', 1005);
+            $this->throwError('请求信息有误', 1005);
         }
         $spaceNote = $this->spaceNoteModel->getById($id, 0);
         if ($spaceNote['status'] != $status) {
@@ -216,7 +216,7 @@ class SpaceService extends BaseService
                 'modifyTime' => time()
             ]);
             if (!$result) {
-                throw new \Exception('修改失败', 1002);
+                $this->throwError('修改失败', 1002);
             }
         }
         return 'success';
@@ -231,11 +231,11 @@ class SpaceService extends BaseService
     public function getSpaceNotes($sid)
     {
         if (empty($sid)) {
-            throw new \Exception('空间信息不可为空', 1004);
+            $this->throwError('空间信息不可为空', 1004);
         }
         $space = $this->spaceModel->getById($sid);
         if (empty($space)) {
-            throw new \Exception('空间信息不存在', 1007);
+            $this->throwError('空间信息不存在', 1007);
         }
         $notes = $this->spaceNoteModel->getBySid($sid);
         $space['notes'] = $notes;

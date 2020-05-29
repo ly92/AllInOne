@@ -31,13 +31,24 @@ class ClientController extends Controller
         //     'password' => 'required'
         // ]);
 
+        // $this->validatorRequest($request->all(), [
+        //     'mobile' => 'required|min:11|max:11',
+        //     'name' => 'required',
+        //     'password' => 'required'
+        // ]);
+
 	    $mobile = $request->input('mobile');
 	    $password = $request->input('password');
 	    $name = $request->input('name');
 
 	    $result = $this->clientService->add($mobile, $password, $name);
 
-        return '1231';
+        try {
+            $this->setContent($result);
+        } catch (\Exception $e) {
+        }
+
+        return $this->response();
 
     }
 
