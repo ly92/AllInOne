@@ -1,5 +1,7 @@
 <?php
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,13 +13,12 @@
 |
 */
 
-/** @var TYPE_NAME $router */
 
+/** @var TYPE_NAME $router */
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
 
-$router->get('/test', function () use ($router) {
-    return phpinfo();
-});
+$router->post('/register', "Api\ClientController@register");
+

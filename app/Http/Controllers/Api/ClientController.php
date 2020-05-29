@@ -19,52 +19,56 @@ class ClientController extends Controller
 
 	public function __construct()
 	{
+	    parent::__construct();
+
 		$this->clientService = new ClientService();
+
 	}
 
     public function register(Request $request)
     {
-
-        // $validatedData = $request->validate([
-        //     'mobile' => 'required|min:11|max:11',
-        //     'name' => 'required',
-        //     'password' => 'required'
-        // ]);
-
-        // $this->validatorRequest($request->all(), [
-        //     'mobile' => 'required|min:11|max:11',
-        //     'name' => 'required',
-        //     'password' => 'required'
-        // ]);
+        $this->validateRequest($request->all(), [
+            'mobile' => 'required|min:11|max:11',
+            'name' => 'required',
+            'password' => 'required'
+        ]);
 
 	    $mobile = $request->input('mobile');
 	    $password = $request->input('password');
 	    $name = $request->input('name');
 
-	    $result = $this->clientService->add($mobile, $password, $name);
-
         try {
+            $result = $this->clientService->add($mobile, $password, $name);
             $this->setContent($result);
         } catch (\Exception $e) {
+            $this->setCodeAndMessage($e->getCode(), $e->getMessage());
         }
-
         return $this->response();
-
     }
 
     public function login(Request $request){
 		$mobile = $request->input('mobile');
 		$password = $request->input('password');
 
-		$result = $this->clientService->login($mobile, $password);
-
+        try {
+            $result = $this->clientService->login($mobile, $password);
+            $this->setContent($result);
+        } catch (\Exception $e) {
+            $this->setCodeAndMessage($e->getCode(), $e->getMessage());
+        }
+        return $this->response();
     }
 
     public function logout(Request $request){
     	$cid = $request->input('cid');
 
-    	$result = $this->clientService->logout($cid);
-
+        try {
+            $result = $this->clientService->logout($cid);
+            $this->setContent($result);
+        } catch (\Exception $e) {
+            $this->setCodeAndMessage($e->getCode(), $e->getMessage());
+        }
+        return $this->response();
     }
 
     public function modify(Request $request){
@@ -72,7 +76,10 @@ class ClientController extends Controller
     	$mobile = $request->input('mobile', '');
     	$name = $request->input('name', '');
 
-    	$this->clientService->modify($cid, $mobile, $name);
+        try {
+            $this->clientService->modify($cid, $mobile, $name);
+        } catch (\Exception $e) {
+        }
     }
 
     public function resetPwd(Request $request){
@@ -81,7 +88,10 @@ class ClientController extends Controller
 	    $oldPwd = $request->input('oldPassword', '');
 		$code = $request->input('code', '');
 
-	    $result = $this->clientService->resetPassword($mobile, $newPwd, $oldPwd, $code);
+        try {
+            $result = $this->clientService->resetPassword($mobile, $newPwd, $oldPwd, $code);
+        } catch (\Exception $e) {
+        }
     }
 
 

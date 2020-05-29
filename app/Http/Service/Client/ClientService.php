@@ -93,14 +93,14 @@ class ClientService extends BaseService
 		return 1;
     }
 
-	/**
-	 * 注册
-	 * @param $mobile
-	 * @param $password
-	 * @param $name
-	 * @return int
-	 * @throws \Exception
-	 */
+    /**
+     * 注册
+     * @param $mobile
+     * @param $password
+     * @param $name
+     * @return int
+     * @throws \Exception
+     */
     public function add($mobile, $password, $name){
 
 	    if (empty($mobile) || empty($password)){
