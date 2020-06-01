@@ -22,6 +22,10 @@ class NoteController extends Controller
         $this->noteService = new NoteService();
     }
 
+	/**
+	 * @param Request $request
+	 * @return array
+	 */
     public function addNote(Request $request){
         $this->validateRequest($request->all(), [
             'cid' => 'required',
@@ -29,8 +33,34 @@ class NoteController extends Controller
             'type' => 'required'
         ]);
 
-        $result = $this->noteService->add
+        $cid = $request->input('cid');
+        $title = $request->input('title');
+        $type = $request->input('type');
+        $subTitle = $request->input('subTitle');
+        $content = $request->input('content');
+        $tags = $request->input('tags');
+        $sid = $request->input('sid');
+        $result = $this->noteService->add($cid, $title, $type, $subTitle, $content, $sid, $tags);
+        $this->setContent($result);
+        return $this->response();
+    }
 
+
+    public function addCell(Request $request){
+    	$this->validateRequest($request->all(), [
+    		'cid' => 'required',
+		    'nid' => 'required',
+		    'title' => 'required',
+		    'type' => 'required',
+		    'num' => 'required'
+	    ]);
+
+    	$cid = $request->input('cid');
+    	$nid = $request->input('nid');
+    	$title = $request->input('title');
+    	$type = $request->input('type');
+    	$num = $request->input('num');
 
     }
+
 }
