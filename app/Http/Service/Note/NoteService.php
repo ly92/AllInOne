@@ -17,5 +17,7 @@ class NoteService extends BaseService
         parent::__construct();
     }
 
-    // public function add()
+    public function add($cid, $sid = 0, ){
+
+    }
 }
