@@ -8,6 +8,7 @@
 
 namespace App\Http\Service\Note;
 
+use App\Http\Model\Note\NoteCellModel;
 use App\Http\Model\Note\NoteModel;
 use App\Http\Model\Note\NoteTagModel;
 use App\Http\Service\BaseService;
@@ -17,12 +18,14 @@ class NoteService extends BaseService
 {
 	private $noteModel;
 	private $noteTagModel;
+	private $noteCellModel;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->noteModel = new NoteModel();
 		$this->noteTagModel = new NoteTagModel();
+		$this->noteCellModel = new NoteCellModel();
 	}
 
 	public function add($cid, $title, $type = 1, $subTitle = '', $content = '', $sid = 0, $tags = '')

@@ -16,11 +16,16 @@ use Illuminate\Http\Request;
 class NoteController extends Controller
 {
     private $noteService;
+    private $noteCellService;
+    private $tagService;
+
     public function __construct()
     {
         parent::__construct();
         $this->noteService = new NoteService();
     }
+
+
 
 	/**
 	 * @param Request $request
@@ -45,6 +50,17 @@ class NoteController extends Controller
         return $this->response();
     }
 
+    public function getCellType(Request $request){
+
+    }
+
+    public function addCellType(Request $request){
+
+    }
+
+    public function modifyCellType(Request $request){
+
+    }
 
     public function addCell(Request $request){
     	$this->validateRequest($request->all(), [
