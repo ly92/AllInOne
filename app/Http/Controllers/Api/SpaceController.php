@@ -42,6 +42,23 @@ class SpaceController extends Controller
 		return $this->response();
 	}
 
+	/**
+	 * 获取空间，默认是自己的可用空间
+	 * @param Request $request
+	 * @return array
+	 */
+	public function getSpaces(Request $request){
+		$this->validateRequest($request->all(), [
+			'cid' => 'required'
+		]);
+		$cid = $request->input('cid');
+		$justOwner = $request->input('justOwner', 1);
+		$status = $request->input('status', 1);
+		$result = $this->spaceService->getSpaces($cid, $justOwner, $status);
+		$this->setContent($result);
+		return $this->response();
+	}
+
     /**
      * 添加空间成员
      * @param Request $request

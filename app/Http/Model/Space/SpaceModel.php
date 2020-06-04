@@ -63,18 +63,22 @@ class SpaceModel extends BaseModel
     {
         $db = DB::table(self::$table . ' as a')
             ->leftJoin(SpaceNoteModel::$atble . ' as b', 'a.id', '=', 'b.sid')
-            ->leftJoin(SpaceMemberModel::$table . ' as c', 'a.id', '=', 'c.sid')
-            ->where('a.status', $status);
+            ->leftJoin(SpaceMemberModel::$table . ' as c', 'a.id', '=', 'c.sid');
+
+        if (!empty($status)){
+        	$db->where('a.status', $status);
+        }
+
         if ($justOwner) {
             $db->where('a.cid', $cid);
         } else {
             $db->where( function($query) use ($cid) {
                 $query->where('a.cid', $cid)
-                    ->orWhere('a.cid', $cid);
+                    ->orWhere('c.cid', $cid);
             });
         }
 
-        return $db->selectRaw('a.*, count(b.*) as memberCount, count(c.*) as noteCount')
+        return $db->selectRaw('a.*, count(c.*) as memberCount, count(b.*) as noteCount')
             ->get()->toArray();
     }
 

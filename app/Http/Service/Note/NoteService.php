@@ -74,4 +74,84 @@ class NoteService extends BaseService
 
 		return $id;
 	}
+
+
+
+	public function getCellTypes($cid, $status = 1){
+		$client = (new ClientService())->getById($cid);
+		if (empty($client)) {
+			throw new \Exception('用户信息无效', 1002);
+		}
+		$list = $this->noteCellModel->getTypes($cid, $status);
+		return $list;
+	}
+
+	public function addCellType($cid, $title, $type, $index){
+		$client = (new ClientService())->getById($cid);
+		if (empty($client)) {
+			throw new \Exception('用户信息无效', 1002);
+		}
+		$cellType = $this->noteCellModel->getTypeByTitle($title);
+		if ($cellType){
+			$this->noteCellModel->modifyType($cellType['id'], [
+				'title' => $title,
+				'type' => $type,
+				'index' => $index,
+				'modifyTime' => time()
+			]);
+			return $cellType['id'];
+		}else{
+			$id = $this->noteCellModel->addType([
+				'cid' => $cid,
+				'title' => $title,
+				'type' => $type,
+				'index' => $index,
+				'creationType' => time()
+			]);
+		}
+
+	}
+
+	public function modifyCellType($cid, $id, $title, $type, $index, $status){
+		$client = (new ClientService())->getById($cid);
+		if (empty($client)) {
+			throw new \Exception('用户信息无效', 1002);
+		}
+		$cellType = $this->noteCellModel->getTypeById($id);
+		if (empty($cellType) || $cellType['cid'] != $cid){
+			throw new \Exception('不可修改', 2001);
+		}
+
+		$data = [];
+		if (!empty($title)){
+			$data['title'] = $title;
+		}
+		if (!empty($type)){
+			$data['type'] = $type;
+		}
+		if (!empty($index)){
+			$data['index'] = $index;
+		}
+		if (!empty($status)){
+			$data['status'] = $status;
+		}
+
+		if (empty($data)){
+			return 'success';
+		}
+
+		$result = $this->noteCellModel->modifyType($id, $data);
+		return $result;
+	}
+
+
+	public function addCell($cid, $nid, $tid, $num, $presentation, $address){
+		$client = (new ClientService())->getById($cid);
+		if (empty($client)) {
+			throw new \Exception('用户信息无效', 1002);
+		}
+		$note = $this->noteModel->getById($nid);
+
+
+	}
 }

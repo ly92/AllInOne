@@ -59,6 +59,15 @@ class TagModel extends BaseModel
 	 * @return \Illuminate\Database\Eloquent\Model|null|object|static
 	 */
 	public function getById($id){
-		return DB::table(self::$table)->where('id', $id)->first();
+		return DB::table(self::$table)->where('id', $id)->where('status', 1)->first();
 	}
+
+	/**
+	 * @param $name
+	 * @return \Illuminate\Database\Eloquent\Model|null|object|static
+	 */
+	public function getByTitle($title){
+		return DB::table(self::$table)->where('name', $name)->first();
+	}
+
 }

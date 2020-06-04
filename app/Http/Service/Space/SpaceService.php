@@ -142,13 +142,14 @@ class SpaceService extends BaseService
         return 'success';
     }
 
-    /**
-     * 某人参与的空间
-     * @param $cid
-     * @return array
-     * @throws \Exception
-     */
-    public function getSpaces($cid)
+	/**
+	 * 某人参与的空间
+	 * @param $cid
+	 * @param $justOwner
+	 * @param $status
+	 * @return array
+	 */
+    public function getSpaces($cid, $justOwner = 0, $status = 1)
     {
         if (empty($cid)) {
             $this->throwError('缺少用户信息', 1002);
@@ -158,7 +159,7 @@ class SpaceService extends BaseService
             $this->throwError('用户信息不存在', 1002);
         }
 
-        $spaces = $this->spaceModel->getSpaces($cid);
+        $spaces = $this->spaceModel->getSpaces($cid, $justOwner, $status);
         return $spaces;
     }
 

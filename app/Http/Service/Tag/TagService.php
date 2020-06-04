@@ -32,7 +32,7 @@ class TagService extends BaseService
 	public function search($cid, $title = '', $status = 1)
 	{
 		$client = (new ClientService())->getById($cid);
-		if (empty($client)){
+		if (empty($client)) {
 			throw new \Exception('用户信息不存在', 1002);
 		}
 		$list = $this->tagModel->search($cid, $title, $status);
@@ -46,18 +46,29 @@ class TagService extends BaseService
 	 * @return int
 	 * @throws \Exception
 	 */
-	public function add($cid, $title, $color){
+	public function add($cid, $title, $color)
+	{
 		$client = (new ClientService())->getById($cid);
-		if (empty($client)){
+		if (empty($client)) {
 			throw new \Exception('用户信息不存在', 1002);
 		}
-		$id = $this->tagModel->add([
-			'cid' => $cid,
-			'title' => $title,
-			'color' => $color,
-			'creationTime' => time()
-		]);
-		return $id;
+
+		$tag = $this->tagModel->getByTitle($title);
+		if ($tag){
+			$this->tagModel->modify($tag['id'], [
+				'status' => 1,
+				'color' => $color,
+				'modifyTime' => time()
+			]);
+		}else{
+			$id = $this->tagModel->add([
+				'cid' => $cid,
+				'title' => $title,
+				'color' => $color,
+				'creationTime' => time()
+			]);
+			return $id;
+		}
 	}
 
 	/**
@@ -69,25 +80,26 @@ class TagService extends BaseService
 	 * @return int|string
 	 * @throws \Exception
 	 */
-	public function modify($cid, $id, $title = '', $color = '', $status = 0){
+	public function modify($cid, $id, $title = '', $color = '', $status = 0)
+	{
 		$tag = $this->tagModel->getById($id);
-		if (empty($tag) || $tag['cid'] != $cid){
-			throw new \Exception('不允许修改ß', 1003);
+		if (empty($tag) || $tag['cid'] != $cid) {
+			throw new \Exception('不允许修改', 1003);
 		}
 		$data = [];
-		if (!empty($title)){
+		if (!empty($title)) {
 			$data['title'] = $title;
 		}
-		if (!empty($color)){
+		if (!empty($color)) {
 			$data['color'] = $color;
 		}
-		if (!empty($status)){
+		if (!empty($status)) {
 			$data['status'] = $status;
 		}
 
-		if (!empty($data)){
+		if (!empty($data)) {
 			$result = $this->tagModel->modify($id, $data);
-		}else{
+		} else {
 			$result = 'success';
 		}
 		return $result;
