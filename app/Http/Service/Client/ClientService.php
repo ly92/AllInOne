@@ -55,19 +55,17 @@ class ClientService extends BaseService
             $this->throwError('当前手机号未注册', 1002);
         }
 
-        if ($client['password'] != $password){
+        if ($client->password != $password){
         	$this->throwError('密码错误', 1003);
         }
-
+        $ts = time();
         //重复登录验证,生成本次登录的token
-	    $token = md5($client['id'] . time());
+	    $token = md5($client->id . $ts);
         //记录token
-	    $this->clientModel->update($client['id'], ['token' => $token, 'modifyTime' => time()]);
-
-	    $client['token'] = $token;
-
+	    $this->clientModel->update($client->id, ['token' => $token, 'lastLoginTime' => $ts, 'modifyTime' => time()]);
+	    $client->token = $token;
 	    //不要暴露密码
-	    unset($client['password']);
+	    unset($client->password);
 
         return $client;
     }
@@ -98,10 +96,15 @@ class ClientService extends BaseService
      * @param $mobile
      * @param $password
      * @param $name
+     * @param $code
      * @return int
      * @throws \Exception
      */
-    public function add($mobile, $password, $name){
+    public function register($mobile, $password, $name, $code){
+
+        if ($code != 1234){
+            $this->throwError('验证码错误', 1112);
+        }
 
 	    if (empty($mobile) || empty($password)){
 		    $this->throwError('请输入手机号和密码', 1005);

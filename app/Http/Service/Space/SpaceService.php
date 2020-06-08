@@ -68,8 +68,17 @@ class SpaceService extends BaseService
      * @return string
      * @throws \Exception
      */
-    public function addSpaceMember($sid, $mobiles)
+    public function addSpaceMember($cid, $sid, $mobiles)
     {
+        if (!empty($cid)) {
+            $client = (new ClientService())->getById($cid);
+            if (empty($client)) {
+                $this->throwError('用户信息不存在', 1002);
+            }
+        } else {
+            $this->throwError('缺少用户信息', 1002);
+        }
+
         if (empty($sid) || empty($mobiles)) {
             $this->throwError('空间信息和成员信息不可为空', 1004);
         }
@@ -77,6 +86,11 @@ class SpaceService extends BaseService
         if (empty($space)) {
             $this->throwError('空间信息不存在', 1005);
         }
+
+        if ($space->cid != $cid){
+            $this->throwError('无权操作', 1006);
+        }
+
         $mobiles = explode(',', $mobiles);
         $data = [];
         foreach ($mobiles as $mobile) {
@@ -84,7 +98,7 @@ class SpaceService extends BaseService
             if ($client) {
                 $temp = [
                     'sid' => $sid,
-                    'cid' => $client['id'],
+                    'cid' => $client->id,
                     'status' => 2,
                     'creationTime' => time()
                 ];
@@ -142,13 +156,14 @@ class SpaceService extends BaseService
         return 'success';
     }
 
-	/**
-	 * 某人参与的空间
-	 * @param $cid
-	 * @param $justOwner
-	 * @param $status
-	 * @return array
-	 */
+    /**
+     * 参与的的空间,包含自己创建的空间
+     * @param $cid
+     * @param int $justOwner
+     * @param int $status
+     * @return array
+     * @throws \Exception
+     */
     public function getSpaces($cid, $justOwner = 0, $status = 1)
     {
         if (empty($cid)) {

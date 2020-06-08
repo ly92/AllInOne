@@ -55,11 +55,14 @@ class Controller extends BaseController
 
     public function setContent($content)
     {
-        if (is_array($content)) {
-            $this->content = $content;
+        if (is_object($content)) {
+            $this->content = json_decode(json_encode($content), true);
         }
-        if (is_string($content)) {
+        if (is_string($content) || is_int($content)) {
             $this->content = ['result' => $content];
+        }
+        if (is_array($content)){
+            $this->content = $content;
         }
     }
 

@@ -27,7 +27,7 @@ class SpaceMemberModel extends BaseModel
      * @return int
      */
     public function add($data){
-        return DB::table(self::$atble)->insert($data);
+        return DB::table(self::$table)->insert($data);
     }
 
     /**

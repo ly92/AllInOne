@@ -20,8 +20,10 @@ $router->get('/', function () use ($router) {
 
 
 $router->post('/register', "Api\ClientController@register");
+$router->post('/login', "Api\ClientController@login");
 
-$router->group(['middleware' => 'auth', 'namespace' => 'Api', 'prefix' => 'app'], function () use ($router) {
+
+$router->group(['middleware' => 'auth', 'namespace' => 'Api', 'prefix' => 'api'], function () use ($router) {
 
 
 	/*************************** 空间 ****************************/

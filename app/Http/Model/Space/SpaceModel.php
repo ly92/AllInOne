@@ -9,6 +9,7 @@
 namespace App\Http\Model\Space;
 
 use App\Http\Model\BaseModel;
+use App\Http\Model\Note\NoteModel;
 use Illuminate\Support\Facades\DB;
 
 class SpaceModel extends BaseModel
@@ -62,23 +63,22 @@ class SpaceModel extends BaseModel
     public function getSpaces($cid, $justOwner = 0, $status = 1)
     {
         $db = DB::table(self::$table . ' as a')
-            ->leftJoin(SpaceNoteModel::$atble . ' as b', 'a.id', '=', 'b.sid')
+            ->leftJoin(NoteModel::$table . ' as b', 'a.id', '=', 'b.sid')
             ->leftJoin(SpaceMemberModel::$table . ' as c', 'a.id', '=', 'c.sid');
-
         if (!empty($status)){
         	$db->where('a.status', $status);
         }
-
         if ($justOwner) {
             $db->where('a.cid', $cid);
         } else {
             $db->where( function($query) use ($cid) {
-                $query->where('a.cid', $cid)
-                    ->orWhere('c.cid', $cid);
+                $query->where('c.cid', $cid)
+                    ->orWhere('a.cid', $cid);
             });
         }
-
-        return $db->selectRaw('a.*, count(c.*) as memberCount, count(b.*) as noteCount')
+        return $db->selectRaw('a.*, count(c.id) + 1 as memberCount, count(b.id) as noteCount, IF(a.cid=?, 1, 0) AS
+        owner', [$cid])
+            ->groupBy('a.id')->orderBy('owner', 'desc')
             ->get()->toArray();
     }
 

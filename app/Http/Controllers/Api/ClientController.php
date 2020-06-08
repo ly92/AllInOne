@@ -36,14 +36,16 @@ class ClientController extends Controller
         $this->validateRequest($request->all(), [
             'mobile' => 'required|min:11|max:11',
             'name' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'code' => 'required'
         ]);
 
         $mobile = $request->input('mobile');
         $password = $request->input('password');
         $name = $request->input('name');
+        $code = $request->input('code');
 
-        $result = $this->clientService->add($mobile, $password, $name);
+        $result = $this->clientService->register($mobile, $password, $name, $code);
         $this->setContent($result);
         return $this->response();
     }

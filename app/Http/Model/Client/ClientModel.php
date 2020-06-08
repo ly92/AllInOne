@@ -38,7 +38,8 @@ class ClientModel extends BaseModel
      * @return \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function getByMobile($mobile, $status = 1){
-        return DB::table(self::$table)->where('mobile', $mobile)->where('status', $status)->first();
+        $db = DB::table(self::$table)->where('mobile', $mobile)->where('status', $status)->first();
+        return $db;
     }
 
     /**

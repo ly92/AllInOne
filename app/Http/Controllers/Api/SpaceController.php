@@ -42,11 +42,12 @@ class SpaceController extends Controller
 		return $this->response();
 	}
 
-	/**
-	 * 获取空间，默认是自己的可用空间
-	 * @param Request $request
-	 * @return array
-	 */
+    /**
+     * 参与的的空间,包含自己创建的空间
+     * @param Request $request
+     * @return array
+     * @throws \Exception
+     */
 	public function getSpaces(Request $request){
 		$this->validateRequest($request->all(), [
 			'cid' => 'required'
@@ -67,14 +68,16 @@ class SpaceController extends Controller
      */
 	public function addMember(Request $request){
 	    $this->validateRequest($request->all(), [
+	        'cid' => 'required',
 	        'sid' => 'required',
             'mobiles' => 'required'
         ]);
 
+	    $cid = $request->input('cid');
 		$sid = $request->input('sid');
 		$mobiles = $request->input('mobiles');
 
-		$result = $this->spaceService->addSpaceMember($sid, $mobiles);
+		$result = $this->spaceService->addSpaceMember($cid, $sid, $mobiles);
         $this->setContent($result);
         return $this->response();
 	}
