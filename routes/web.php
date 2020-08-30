@@ -23,6 +23,9 @@ $router->post('/register', "Api\ClientController@register");
 $router->post('/login', "Api\ClientController@login");
 
 
+$router->post('/test', "TestController@test");
+
+
 $router->group(['middleware' => 'auth', 'namespace' => 'Api', 'prefix' => 'api'], function () use ($router) {
 
 
